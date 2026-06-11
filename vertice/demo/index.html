@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vértice — Demo interactiva</title>
+<meta name="description" content="Demo interactiva de Vértice: app de gestión que funciona offline y sincroniza. Datos de ejemplo." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234F46E5'/%3E%3Ctext x='50' y='72' font-size='60' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{--primary:#4F46E5;--accent:#0EA5E9;--bg:#f3f4fb;--panel:#fff;--ink:#1e1b4b;--muted:#6b6b8a;--line:#e6e7f3;--dark:#1e1b4b;--font:'Inter',system-ui,sans-serif;--head:'Sora',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:#1e1b4b;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+.topbar{height:52px;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex:none}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-family:var(--head)}
+.brand .mk{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#6366f1,#4F46E5);display:grid;place-items:center;font-size:.85rem}
+.badge{font-size:.7rem;font-weight:700;background:rgba(14,165,233,.18);color:#7dd3fc;border:1px solid rgba(14,165,233,.4);padding:3px 9px;border-radius:999px}
+.right{display:flex;gap:14px;font-size:.82rem}.right a{color:#c7c7e6}.right a:hover{color:#fff}
+.shell{flex:1;display:flex;min-height:0}
+.side{width:200px;background:var(--dark);color:#c7c7e6;padding:18px 12px;flex:none;display:flex;flex-direction:column;gap:3px}
+@media(max-width:820px){.side{display:none}}
+.side .item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;font-size:.85rem;cursor:pointer}
+.side .item svg{width:16px;height:16px;opacity:.85}
+.side .item.active{background:var(--primary);color:#fff}
+.side .item:not(.active):hover{background:rgba(255,255,255,.06);color:#fff}
+.netbox{margin-top:auto;font-size:.74rem;border-radius:10px;padding:10px;border:1px solid}
+.netbox.online{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.4);color:#6ee7b7}
+.netbox.offline{background:rgba(234,179,8,.12);border-color:rgba(234,179,8,.4);color:#fcd34d}
+.netbox .t{font-weight:700;display:flex;align-items:center;gap:7px}
+.tgl{margin-top:8px;display:flex;align-items:center;gap:8px;cursor:pointer;color:#c7c7e6;font-size:.72rem}
+.sw{width:34px;height:18px;border-radius:999px;background:#475569;position:relative;transition:.2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:#0EA5E9}.sw.on::after{left:18px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:auto}
+.head{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.head h1{font-size:1.3rem;font-family:var(--head)}
+.head .sub{color:var(--muted);font-size:.85rem}
+.btn{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:10px;padding:10px 15px;font-family:var(--font);font-weight:700;font-size:.86rem;cursor:pointer}
+.btn-p{background:var(--primary);color:#fff}.btn-p:hover{background:#4338ca}
+.btn-o{background:#eef0fb;color:#4338ca}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 22px 14px}
+@media(max-width:600px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px 15px}
+.kpi .l{font-size:.74rem;color:var(--muted)}.kpi .v{font-size:1.4rem;font-weight:800;color:var(--primary);font-family:var(--head)}
+.tablewrap{margin:0 22px 22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th{text-align:left;color:var(--muted);font-weight:600;padding:11px 14px;background:#f8fafc;border-bottom:1px solid var(--line);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+td{padding:11px 14px;border-bottom:1px solid #f1f5f9}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+tr.new{animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pill{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px}
+.pill.ok{background:#dcfce7;color:#15803d}.pill.pend{background:#fef3c7;color:#a16207}.pill.sync{background:#e0f2fe;color:#0369a1}
+.ov{position:fixed;inset:0;background:rgba(30,27,75,.5);display:none;align-items:center;justify-content:center;z-index:10;padding:18px}
+.ov.on{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:380px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.modal h3{font-family:var(--head);font-size:1.1rem;margin-bottom:14px}
+.modal label{display:block;font-size:.78rem;color:var(--muted);margin:10px 0 5px;font-weight:600}
+.modal input,.modal select{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font-family:var(--font);font-size:.88rem;background:#f8fafc}
+.modal .acts{display:flex;gap:10px;margin-top:18px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:11px 18px;border-radius:12px;font-size:.84rem;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:20;opacity:0;transition:.3s}
+.toast.on{opacity:1}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.hint{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;font-size:.8rem;padding:8px 15px;border-radius:999px;box-shadow:0 8px 20px rgba(79,70,229,.4);z-index:5}
+@media(prefers-reduced-motion:reduce){tr.new,.spin{animation:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand"><span class="mk">V</span> Vértice <span class="badge">● DEMO · datos de ejemplo</span></div>
+  <div class="right"><a href="../">← Volver al showcase</a><a href="../../">Portafolio</a></div>
+</div>
+<div class="shell">
+  <aside class="side">
+    <div class="item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l3-3 3 3 5-6"/></svg> Tablero</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Registros</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> Archivos</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z"/></svg> Ajustes</div>
+    <div class="netbox online" id="netbox"><div class="t"><span id="netico">🟢</span> <span id="nettxt">En línea</span></div><div class="tgl" id="tgl"><span class="sw" id="sw"></span> Simular sin internet</div></div>
+  </aside>
+  <div class="main">
+    <div class="head">
+      <div><h1>Registros</h1><div class="sub">Captura que funciona con o sin conexión</div></div>
+      <button class="btn btn-p" id="add"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Nuevo registro</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Registros del mes</div><div class="v" id="kTot">1,284</div></div>
+      <div class="kpi"><div class="l">Pendientes de sync</div><div class="v" id="kPend" style="color:#d97706">0</div></div>
+      <div class="kpi"><div class="l">Estado</div><div class="v" id="kEstado" style="color:#059669">Al día</div></div>
+    </div>
+    <div class="tablewrap">
+      <table><thead><tr><th>Folio</th><th>Concepto</th><th>Estado</th><th style="text-align:right">Monto</th></tr></thead>
+      <tbody id="tb">
+        <tr><td>A-1042</td><td>Servicio a cliente</td><td><span class="pill ok">Sincronizado</span></td><td class="num">$3,200</td></tr>
+        <tr><td>A-1041</td><td>Compra de insumos</td><td><span class="pill ok">Sincronizado</span></td><td class="num">$980</td></tr>
+        <tr><td>A-1040</td><td>Mantenimiento</td><td><span class="pill ok">Sincronizado</span></td><td class="num">$5,410</td></tr>
+        <tr><td>A-1039</td><td>Cotización</td><td><span class="pill ok">Sincronizado</span></td><td class="num">$1,750</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="modal">
+  <h3>Nuevo registro</h3>
+  <label>Concepto</label><input id="mC" value="Visita técnica" />
+  <label>Tipo</label><select id="mT"><option>Servicio</option><option>Compra</option><option>Cotización</option></select>
+  <label>Monto</label><input id="mM" value="2,450" />
+  <div class="acts"><button class="btn btn-o" id="cancel" style="flex:1">Cancelar</button><button class="btn btn-p" id="save" style="flex:1">Guardar</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+<div class="hint" id="hint">Activa “sin internet” y crea un registro para ver la magia ✨</div>
+
+<script>
+const ov=document.getElementById('ov'),toast=document.getElementById('toast'),tb=document.getElementById('tb'),hint=document.getElementById('hint');
+const sw=document.getElementById('sw'),netbox=document.getElementById('netbox');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?Math.min(ms,100):ms));
+let offline=false,folio=1043,pend=0;
+function setNet(){netbox.className='netbox '+(offline?'offline':'online');document.getElementById('netico').textContent=offline?'🟡':'🟢';document.getElementById('nettxt').textContent=offline?'Sin internet (modo local)':'En línea';sw.classList.toggle('on',offline);}
+document.getElementById('tgl').onclick=async()=>{offline=!offline;setNet();if(!offline&&pend>0)await syncAll();};
+document.getElementById('add').onclick=()=>{ov.classList.add('on');hint.style.display='none'};
+document.getElementById('cancel').onclick=()=>ov.classList.remove('on');
+async function showToast(html,ms){toast.innerHTML=html;toast.classList.add('on');await wait(ms);toast.classList.remove('on');await wait(250);}
+function setKpi(){document.getElementById('kPend').textContent=pend;document.getElementById('kEstado').textContent=pend?'Pendiente':'Al día';document.getElementById('kEstado').style.color=pend?'#d97706':'#059669';}
+async function syncAll(){
+  await showToast('<span class="spin"></span> Conexión recuperada · sincronizando '+pend+' registro(s)…',1300);
+  [...tb.querySelectorAll('.pill.pend')].forEach(p=>{p.className='pill sync';p.textContent='Sincronizando';});
+  await wait(600);
+  [...tb.querySelectorAll('.pill.sync')].forEach(p=>{p.className='pill ok';p.textContent='Sincronizado';});
+  pend=0;setKpi();
+  await showToast('<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#34d399" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg> Todo sincronizado ✓',1400);
+}
+document.getElementById('save').onclick=async()=>{
+  const c=document.getElementById('mC').value,t=document.getElementById('mT').value,m=document.getElementById('mM').value;
+  ov.classList.remove('on');
+  const tr=document.createElement('tr');tr.className='new';
+  const pill=offline?'<span class="pill pend">Pendiente (local)</span>':'<span class="pill ok">Sincronizado</span>';
+  tr.innerHTML=`<td>A-${folio++}</td><td>${c} · ${t}</td><td>${pill}</td><td class="num">$${m}</td>`;
+  tb.prepend(tr);
+  document.getElementById('kTot').textContent='1,'+(285+(folio-1043));
+  if(offline){pend++;setKpi();await showToast('💾 Guardado en el dispositivo (sin internet)',1500);}
+  else{await showToast('<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#34d399" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg> Guardado y sincronizado ✓',1400);}
+  setTimeout(()=>tr.classList.remove('new'),1500);
+};
+// autoplay: activar offline, crear registro, luego reconectar
+(async()=>{await wait(1300);document.getElementById('tgl').click();await wait(700);document.getElementById('add').click();await wait(1100);document.getElementById('save').click();await wait(2400);document.getElementById('tgl').click();})();
+</script>
+</body>
+</html>

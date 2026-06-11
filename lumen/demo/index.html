@@ -101,10 +101,10 @@ table.mini tr.tot td{font-weight:800;color:var(--primary);background:#f8fafc}
 <div class="shell">
   <aside class="side">
     <div class="sec">Módulos</div>
-    <div class="item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg> Asistente</div>
-    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l3-3 3 3 5-6"/></svg> Estado de Resultados</div>
-    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Balance General</div>
-    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg> Ventas</div>
+    <div class="item active" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg> Asistente</div>
+    <div class="item" data-s="edo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l3-3 3 3 5-6"/></svg> Estado de Resultados</div>
+    <div class="item" data-s="balance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Balance General</div>
+    <div class="item" data-s="ventas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg> Ventas</div>
     <div class="conn"><span class="dotg"></span> Conectado · modo demo</div>
   </aside>
   <div class="main">
@@ -161,6 +161,12 @@ const SC={
     narr:['La utilidad neta del periodo fue $312,400 (margen del 17%).','El costo de ventas representó el 58% de los ingresos; los gastos de operación bajaron 3%.'],
     kpis:[['Ventas netas','$1,840,500',0],['Utilidad bruta','$773,010',0],['Utilidad neta','$312,400',1]],
     table:[['Ventas Netas','$1,840,500',0],['Costo de Ventas','-$1,067,490',0],['Utilidad Bruta','$773,010',1],['Gastos de Operación','-$386,500',0],['Utilidad de Operación','$386,510',1],['Otros / Financiamiento','-$74,110',0],['UTILIDAD NETA','$312,400',1]]
+  },
+  balance:{
+    q:'Muéstrame el balance general',
+    narr:['El activo total es $8,940,200 y cuadra con pasivo + capital.','El capital contable es el 54% del total; la liquidez se mantiene saludable.'],
+    kpis:[['Activo total','$8,940,200',0],['Pasivo total','$4,112,800',0],['Capital contable','$4,827,400',1]],
+    table:[['ACTIVO','',1],['Activo Circulante','$3,210,400',0],['Activo Fijo','$5,729,800',0],['Total Activo','$8,940,200',1],['PASIVO','',1],['Pasivo a Corto Plazo','$2,470,300',0],['Pasivo a Largo Plazo','$1,642,500',0],['Total Pasivo','$4,112,800',1],['Capital Contable','$4,827,400',1]]
   }
 };
 
@@ -215,6 +221,13 @@ function submit(){const v=document.getElementById('inp').value.toLowerCase();doc
 document.getElementById('send').addEventListener('click',submit);
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
 document.getElementById('mic').addEventListener('click',()=>{const i=document.getElementById('inp');i.value='¿Cuánto vendí este mes por sucursal?';setTimeout(submit,400);});
+// módulos del menú lateral → reportes
+document.querySelector('.side').addEventListener('click',e=>{
+  const it=e.target.closest('.item'); if(!it) return;
+  document.querySelectorAll('.side .item').forEach(x=>x.classList.remove('active'));
+  it.classList.add('active');
+  const k=it.dataset.s; if(k) ask(k);
+});
 // autoplay primera demo
 setTimeout(()=>ask('ventas'),1100);
 </script>

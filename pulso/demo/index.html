@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pulso — Demo interactiva</title>
+<meta name="description" content="Demo interactiva de Pulso: encuestas que se llenan sin internet y se sincronizan solas. Datos de ejemplo." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230369A1'/%3E%3Ctext x='50' y='72' font-size='60' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Varela+Round&display=swap" rel="stylesheet" />
+<style>
+:root{--primary:#0369A1;--accent:#0EA5E9;--bg:#eef5fa;--panel:#fff;--ink:#0b2434;--muted:#51677a;--line:#dbe7f0;--dark:#0b2434;--font:'Nunito Sans',system-ui,sans-serif;--head:'Varela Round',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:#0b2434;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+.topbar{height:52px;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex:none}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-family:var(--head)}
+.brand .mk{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#0EA5E9,#0369A1);display:grid;place-items:center;font-size:.85rem}
+.badge{font-size:.7rem;font-weight:700;background:rgba(14,165,233,.18);color:#7dd3fc;border:1px solid rgba(14,165,233,.4);padding:3px 9px;border-radius:999px;font-family:var(--font)}
+.right{display:flex;gap:14px;font-size:.82rem}.right a{color:#b6cad8}.right a:hover{color:#fff}
+.stage{flex:1;display:flex;gap:30px;align-items:flex-start;justify-content:center;padding:34px 18px;flex-wrap:wrap}
+/* phone */
+.phone{width:300px;background:#0b2434;border-radius:34px;padding:12px;box-shadow:0 24px 60px rgba(3,105,161,.25);flex:none}
+.screen{background:#fff;border-radius:24px;overflow:hidden;min-height:520px;display:flex;flex-direction:column}
+.shead{background:var(--primary);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+.shead .nm{font-family:var(--head);font-size:1.05rem}
+.net{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:999px}
+.net.on{background:rgba(255,255,255,.2)}.net.off{background:#f59e0b;color:#3b2600}
+.sbody{padding:18px;flex:1;display:flex;flex-direction:column;gap:14px}
+.q{font-family:var(--head);font-size:1rem;color:#0b2434}
+.stars{display:flex;gap:8px}
+.star{width:34px;height:34px;cursor:pointer;color:#cfe0ec;transition:.12s}
+.star.on{color:#0EA5E9;transform:scale(1.1)}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;font-size:.9rem;cursor:pointer;transition:.15s}
+.opt .rd{width:18px;height:18px;border-radius:50%;border:2px solid #94a3b8;flex:none}
+.opt.sel{border-color:var(--primary);background:#e0f2fe}.opt.sel .rd{border-color:var(--primary);background:var(--primary);box-shadow:inset 0 0 0 3px #fff}
+.cmt{border:1.5px solid var(--line);border-radius:12px;padding:11px;font-size:.88rem;font-family:var(--font);background:#f8fafc;resize:none}
+.send{margin-top:auto;background:var(--primary);color:#fff;border:0;border-radius:13px;padding:14px;font-family:var(--head);font-size:1rem;cursor:pointer}
+.send:hover{background:#075985}
+.thanks{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px}
+.thanks .ck{width:74px;height:74px;border-radius:50%;background:#dcfce7;display:grid;place-items:center;animation:pp .4s ease}
+@keyframes pp{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.thanks h3{font-family:var(--head);font-size:1.3rem;color:#0b2434}
+.syncline{font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.spin{width:14px;height:14px;border:2px solid #cfe0ec;border-top-color:var(--primary);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* side panel: results + controls */
+.panel{width:340px;max-width:100%;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card h4{font-family:var(--head);font-size:1rem;margin-bottom:4px}
+.card .sub{font-size:.8rem;color:var(--muted);margin-bottom:14px}
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:.82rem}
+.bar .lb{width:64px;color:var(--muted)}
+.bar .tr{flex:1;height:10px;background:#eef2f7;border-radius:999px;overflow:hidden}
+.bar .fl{height:100%;border-radius:999px;background:linear-gradient(90deg,#0EA5E9,#0369A1);width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.bar .pc{width:36px;text-align:right;font-weight:700;color:var(--primary)}
+.ctrl{display:flex;align-items:center;justify-content:space-between;font-size:.85rem}
+.sw{width:40px;height:22px;border-radius:999px;background:#cbd5e1;position:relative;cursor:pointer;transition:.2s;flex:none}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:#f59e0b}.sw.on::after{left:20px}
+.queue{font-size:.82rem;color:var(--muted)}
+.queue b{color:var(--primary)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:11px 18px;border-radius:12px;font-size:.84rem;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:20;opacity:0;transition:.3s}
+.toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){.spin,.thanks .ck{animation:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand"><span class="mk">P</span> Pulso <span class="badge">● DEMO · datos de ejemplo</span></div>
+  <div class="right"><a href="../">← Volver al showcase</a><a href="../../">Portafolio</a></div>
+</div>
+<div class="stage">
+  <div class="phone"><div class="screen">
+    <div class="shead"><span class="nm">Encuesta</span><span class="net on" id="net">● En línea</span></div>
+    <div class="sbody" id="form">
+      <div class="q">¿Cómo fue tu experiencia hoy?</div>
+      <div class="stars" id="stars">
+        <svg class="star" data-v="1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg>
+        <svg class="star" data-v="2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg>
+        <svg class="star" data-v="3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg>
+        <svg class="star" data-v="4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg>
+        <svg class="star" data-v="5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 3 2-7L2 9h7z"/></svg>
+      </div>
+      <div class="q" style="font-size:.92rem;margin-top:4px">¿Qué te gustó más?</div>
+      <div class="opts" id="opts">
+        <div class="opt" data-o="Atención"><span class="rd"></span> La atención</div>
+        <div class="opt" data-o="Precios"><span class="rd"></span> Los precios</div>
+        <div class="opt" data-o="Variedad"><span class="rd"></span> La variedad</div>
+      </div>
+      <textarea class="cmt" rows="2" placeholder="Comentario (opcional)…"></textarea>
+      <button class="send" id="send">Enviar</button>
+    </div>
+  </div></div>
+
+  <div class="panel">
+    <div class="card">
+      <h4>Resultados en vivo</h4>
+      <div class="sub">Satisfacción · sucursal demo</div>
+      <div class="bar"><span class="lb">5★ Excelente</span><span class="tr"><span class="fl" data-w="62"></span></span><span class="pc">62%</span></div>
+      <div class="bar"><span class="lb">4★ Bueno</span><span class="tr"><span class="fl" data-w="24"></span></span><span class="pc">24%</span></div>
+      <div class="bar"><span class="lb">3★ Regular</span><span class="tr"><span class="fl" data-w="9"></span></span><span class="pc">9%</span></div>
+      <div class="bar"><span class="lb">≤2★ Malo</span><span class="tr"><span class="fl" data-w="5"></span></span><span class="pc">5%</span></div>
+      <div style="margin-top:8px;font-size:.82rem;color:var(--muted)"><b id="resp">348</b> respuestas recolectadas</div>
+    </div>
+    <div class="card">
+      <div class="ctrl"><span>📶 Simular sin internet</span><span class="sw" id="sw"></span></div>
+      <div class="queue" style="margin-top:12px" id="queue">Sin respuestas pendientes.</div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?Math.min(ms,100):ms));
+let rating=0,opt=null,offline=false,resp=348,queue=0;
+const form=document.getElementById('form'),toast=document.getElementById('toast'),net=document.getElementById('net'),sw=document.getElementById('sw'),queueEl=document.getElementById('queue');
+const FORM_HTML=form.innerHTML;
+function bindForm(){
+  document.querySelectorAll('.star').forEach(s=>s.onclick=()=>{rating=+s.dataset.v;document.querySelectorAll('.star').forEach(x=>x.classList.toggle('on',+x.dataset.v<=rating));});
+  document.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{opt=o.dataset.o;document.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',x===o));});
+  document.getElementById('send').onclick=submit;
+}
+document.getElementById('sw').onclick=async()=>{offline=!offline;sw.classList.toggle('on',offline);net.className='net '+(offline?'off':'on');net.textContent=offline?'● Sin señal':'● En línea';if(!offline&&queue>0)await syncAll();};
+async function showToast(html,ms){toast.innerHTML=html;toast.classList.add('on');await wait(ms);toast.classList.remove('on');await wait(250);}
+function setQueue(){queueEl.innerHTML=queue?`<b>${queue}</b> respuesta(s) guardada(s) en el dispositivo, esperando señal…`:'Sin respuestas pendientes.';}
+function bumpResults(){resp++;document.getElementById('resp').textContent=resp;}
+async function syncAll(){await showToast('<span class="spin"></span> Señal recuperada · enviando '+queue+' respuesta(s)…',1500);queue=0;setQueue();await showToast('<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#34d399" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg> Respuestas sincronizadas ✓',1400);}
+async function submit(){
+  if(!rating)rating=5;
+  form.innerHTML=`<div class="thanks"><div class="ck"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#16a34a" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div><h3>¡Gracias! 🙌</h3><div class="syncline" id="sl"></div></div>`;
+  bumpResults();
+  const sl=document.getElementById('sl');
+  if(offline){queue++;setQueue();sl.innerHTML='💾 Guardada en el dispositivo (sin señal)';}
+  else{sl.innerHTML='<span class="spin"></span> Sincronizando…';await wait(1100);sl.innerHTML='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#16a34a" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg> Enviada ✓';}
+  await wait(2200);resetForm();
+}
+function resetForm(){rating=0;opt=null;form.innerHTML=FORM_HTML;bindForm();}
+bindForm();
+// animar barras al cargar
+setTimeout(()=>document.querySelectorAll('.fl').forEach(f=>f.style.width=f.dataset.w+'%'),300);
+// autoplay: calificar, elegir, enviar
+(async()=>{await wait(1100);document.querySelectorAll('.star')[4].click();await wait(500);document.querySelector('.opt').click();await wait(700);submit();})();
+</script>
+</body>
+</html>
