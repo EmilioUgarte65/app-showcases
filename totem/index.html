@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Totem — Controla tu pantalla espectacular</title>
+<meta name="description" content="Totem: controla tu pantalla espectacular desde el celular. Cambia el contenido al instante, transmite videos de Facebook y muestra el clima en tiempo real." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236366F1'/%3E%3Ctext x='50' y='72' font-size='58' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../style.css" />
+<style>
+:root {
+  --primary: #6366F1; --secondary: #818CF8; --accent: #16A34A;
+  --bg: #EEF2FF; --fg: #312E81; --muted: #5b5c8a; --soft: #e3e7ff;
+  --font-head: 'Space Grotesk', system-ui, sans-serif; --font-body: 'Inter', system-ui, sans-serif;
+}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="brand"><span class="mk">T</span> Totem</div>
+  <div class="nav-links"><a href="#que-hace">Qué hace</a><a href="#como">Cómo funciona</a><a class="nav-cta" href="#demo">Solicitar demo</a></div>
+</div></nav>
+
+<header class="hero"><div class="wrap hero-grid">
+  <div>
+    <span class="eyebrow">Control de pantallas espectaculares</span>
+    <h1>Controla tu <span class="grad">pantalla espectacular</span> desde tu teléfono.</h1>
+    <p class="lead">Totem es el control remoto de tu pantalla gigante. Cambia lo que se ve al instante, transmite videos de Facebook directo a la pantalla y muestra el clima en tiempo real — desde donde estés.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#demo">Solicitar una demo</a>
+      <a class="btn btn-ghost" href="#que-hace">Ver qué hace</a>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="n">Al instante</div><div class="l">Cambia el contenido</div></div>
+      <div class="stat"><div class="n">Facebook</div><div class="l">Transmite videos</div></div>
+      <div class="stat"><div class="n">A distancia</div><div class="l">Desde el celular</div></div>
+    </div>
+  </div>
+  <div class="mock" style="background:transparent;border:0;box-shadow:none" aria-hidden="true">
+    <svg viewBox="0 0 560 392" xmlns="http://www.w3.org/2000/svg">
+      <rect width="560" height="392" fill="transparent"/>
+      <!-- billboard screen -->
+      <rect x="20" y="24" width="330" height="206" rx="14" fill="#312E81"/>
+      <rect x="32" y="36" width="306" height="182" rx="8" fill="#0b1020"/>
+      <!-- video content -->
+      <rect x="32" y="36" width="306" height="182" rx="8" fill="url(#vg)"/>
+      <defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4338ca"/><stop offset="1" stop-color="#1e1b4b"/></linearGradient></defs>
+      <!-- facebook badge -->
+      <rect x="44" y="48" width="92" height="24" rx="7" fill="#1877F2"/><text x="58" y="65" font-size="12" fill="#fff" font-family="Inter" font-weight="700">f Facebook</text>
+      <!-- play button -->
+      <circle class="pulse" cx="185" cy="130" r="30" fill="rgba(255,255,255,.9)"/><path d="M176 116 l24 14 -24 14 z" fill="#312E81"/>
+      <!-- live tag -->
+      <rect x="44" y="190" width="58" height="20" rx="6" fill="#ef4444"/><circle cx="56" cy="200" r="3" fill="#fff"/><text x="66" y="204" font-size="10" fill="#fff" font-family="Inter" font-weight="700">EN VIVO</text>
+      <!-- weather widget -->
+      <rect x="248" y="48" width="80" height="58" rx="10" fill="rgba(255,255,255,.14)"/>
+      <circle cx="270" cy="72" r="10" fill="#facc15"/><g stroke="#facc15" stroke-width="2"><path d="M270 56v-6M270 94v-6M252 72h-6M294 72h-6"/></g>
+      <text x="296" y="78" font-size="20" fill="#fff" font-family="Space Grotesk" font-weight="700" text-anchor="middle">28°</text>
+      <text x="288" y="98" font-size="9" fill="#dbe2ff" font-family="Inter" text-anchor="middle">Soleado · Hoy</text>
+      <!-- stand -->
+      <rect x="176" y="230" width="18" height="40" fill="#c7cbf0"/>
+      <rect x="140" y="270" width="90" height="12" rx="4" fill="#c7cbf0"/>
+      <!-- phone remote -->
+      <rect x="388" y="40" width="150" height="316" rx="28" fill="#312E81"/>
+      <rect x="398" y="50" width="130" height="296" rx="20" fill="#ffffff"/>
+      <text x="414" y="78" font-size="13" fill="#312E81" font-family="Space Grotesk" font-weight="700">Control</text>
+      <circle class="pulse" cx="512" cy="73" r="5" fill="#16A34A"/>
+      <!-- now playing -->
+      <rect x="414" y="90" width="98" height="44" rx="10" fill="#EEF2FF"/><text x="424" y="108" font-size="9" fill="#5b5c8a" font-family="Inter">Reproduciendo</text><text x="424" y="124" font-size="11" fill="#312E81" font-family="Inter" font-weight="700">Video Facebook</text>
+      <!-- content buttons -->
+      <rect x="414" y="144" width="98" height="34" rx="9" fill="#6366F1"/><text x="463" y="165" font-size="11" fill="#fff" text-anchor="middle" font-family="Inter" font-weight="600">▶ Transmitir FB</text>
+      <rect x="414" y="184" width="98" height="34" rx="9" fill="#fff" stroke="#dfe3fb"/><text x="463" y="205" font-size="11" fill="#312E81" text-anchor="middle" font-family="Inter" font-weight="600">☀ Clima</text>
+      <rect x="414" y="224" width="98" height="34" rx="9" fill="#fff" stroke="#dfe3fb"/><text x="463" y="245" font-size="11" fill="#312E81" text-anchor="middle" font-family="Inter" font-weight="600">🖼 Imagen</text>
+      <rect x="414" y="264" width="98" height="34" rx="9" fill="#fff" stroke="#dfe3fb"/><text x="463" y="285" font-size="11" fill="#312E81" text-anchor="middle" font-family="Inter" font-weight="600">⏱ Programar</text>
+      <rect x="414" y="308" width="98" height="30" rx="9" fill="#16A34A"/><text x="463" y="328" font-size="11" fill="#fff" text-anchor="middle" font-family="Inter" font-weight="700">Enviar a pantalla</text>
+    </svg>
+  </div>
+</div></header>
+
+<section id="que-hace"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Qué hace</span><h2>Tu pantalla gigante, en tu bolsillo</h2><p>Toda la potencia de un espectacular, manejada desde una app sencilla.</p></div>
+  <div class="bento">
+    <div class="cell wide">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <h3>Control remoto total</h3>
+      <p>Cambia lo que se muestra en la pantalla espectacular al instante, desde tu celular y sin estar físicamente ahí. Lo que eliges aparece en segundos.</p>
+    </div>
+    <div class="cell">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <h3>Transmite videos de Facebook</h3>
+      <p>Manda videos de Facebook directo a la pantalla, incluso en vivo, con un toque.</p>
+    </div>
+    <div class="cell">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4 12H1M23 12h-3M5 5l-2-2M21 21l-2-2M19 5l2-2M3 21l2-2"/></svg></div>
+      <h3>Clima en tiempo real</h3>
+      <p>Muestra la temperatura y el pronóstico actualizado para tu ciudad.</p>
+    </div>
+    <div class="cell">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <h3>Programa por horarios</h3>
+      <p>Define qué se ve y a qué hora; el contenido cambia solo durante el día.</p>
+    </div>
+    <div class="cell">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+      <h3>Varios formatos</h3>
+      <p>Imágenes, videos y avisos: combina el contenido como necesites.</p>
+    </div>
+    <div class="cell wide">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10M22 2l-10 10"/></svg></div>
+      <h3>Desde donde estés</h3>
+      <p>No necesitas ir hasta la pantalla ni conectar nada: administras todo por internet, desde el teléfono, estés en la oficina o de viaje.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="como" class="alt"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Cómo funciona</span><h2>Tres toques y está en pantalla</h2></div>
+  <div class="flow">
+    <div class="step"><h4>Eliges</h4><p>Seleccionas el contenido: video, imagen o clima.</p></div>
+    <div class="step"><h4>Envías</h4><p>Lo mandas a la pantalla desde la app.</p></div>
+    <div class="step"><h4>Se muestra</h4><p>El espectacular cambia al instante.</p></div>
+    <div class="step"><h4>Programas</h4><p>Dejas listo lo que seguirá durante el día.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">Bajo el capó</span><h2>Hecho para pantallas que no paran</h2></div>
+  <div class="specs">
+    <div class="spec"><span class="dot"></span><div><h4>App + pantalla</h4><p>Aplicación de control conectada con la pantalla espectacular.</p></div></div>
+    <div class="spec"><span class="dot"></span><div><h4>En la nube</h4><p>Controlas a distancia por internet, en tiempo real.</p></div></div>
+    <div class="spec"><span class="dot"></span><div><h4>Integración con Facebook</h4><p>Lleva videos de la red social directo a la pantalla.</p></div></div>
+    <div class="spec"><span class="dot"></span><div><h4>Datos del clima</h4><p>Temperatura y pronóstico actualizados de forma automática.</p></div></div>
+    <div class="spec"><span class="dot"></span><div><h4>Programación</h4><p>Agenda contenidos por horario sin intervención manual.</p></div></div>
+    <div class="spec"><span class="dot"></span><div><h4>Multipantalla</h4><p>Pensado para manejar una o varias pantallas.</p></div></div>
+  </div>
+</div></section>
+
+<section id="demo"><div class="wrap">
+  <div class="cta-card">
+    <h2>¿Tienes una pantalla espectacular que controlar?</h2>
+    <p>Agenda una demostración y te muestro cómo manejarla completa desde el celular.</p>
+    <div class="btn-row" style="justify-content:center">
+      <a class="btn btn-primary" href="https://wa.me/528336817886?text=Hola%2C%20me%20interesa%20una%20demo%20de%20Totem" target="_blank" rel="noopener">Solicitar una demo</a>
+      <a class="btn btn-ghost" href="../">Ver más proyectos</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="brand"><span class="mk">T</span> Totem</div>
+  <div>© <span class="yr"></span> Totem · Control de pantallas espectaculares</div>
+  <a class="back" href="../">← Volver a los proyectos</a>
+</div></footer>
+<script>document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());</script>
+</body>
+</html>
