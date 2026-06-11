@@ -149,25 +149,57 @@ const SC={
     q:'¿Cuánto vendí este mes por sucursal?',
     narr:['Vendiste $1,840,500 este mes (+12.4% vs. el mes anterior).','La sucursal Centro lidera con el 31%; Norte es la de mayor crecimiento (+22%).'],
     kpis:[['Ventas del mes','$1,840,500',0],['Ticket promedio','$642',0],['Crecimiento','+12.4%',1]],
-    chart:{title:'Ventas por sucursal (miles)',data:[['Centro',570,1],['Norte',420,0],['Sur',360,0],['Playa',280,0],['Centro 2',210,0]]}
+    chart:{title:'Ventas por sucursal (miles)',data:[['Centro',570,1],['Norte',420,0],['Sur',360,0],['Playa',280,0],['Centro 2',210,0]]},
+    table:{title:'Ventas por sucursal',head:['Sucursal','Ventas','% del total','vs. mes ant.'],rows:[
+      {c:['Centro','$570,000','31%','+9%'],t:0},
+      {c:['Norte','$420,000','23%','+22%'],t:0},
+      {c:['Sur','$360,000','20%','+5%'],t:0},
+      {c:['Playa','$280,000','15%','+12%'],t:0},
+      {c:['Centro 2','$210,500','11%','+7%'],t:0},
+      {c:['TOTAL','$1,840,500','100%','+12.4%'],t:1},
+    ]}
   },
   comp:{
     q:'Compara las ventas del trimestre',
     narr:['El trimestre cerró en $5.21 M, 9.8% arriba del anterior.','Marzo fue el mejor mes; el promedio mensual subió de $1.58 M a $1.74 M.'],
     kpis:[['Trimestre actual','$5,210,000',1],['Trimestre anterior','$4,745,000',0],['Variación','+9.8%',1]],
-    chart:{title:'Ventas por mes (miles)',data:[['Ene',1610,0],['Feb',1690,0],['Mar',1910,1]]}
+    chart:{title:'Ventas por mes (miles)',data:[['Ene',1610,0],['Feb',1690,0],['Mar',1910,1]]},
+    table:{title:'Comparativo trimestral',head:['Mes','Trim. actual','Trim. anterior','Variación'],rows:[
+      {c:['Enero','$1,610,000','$1,520,000','+5.9%'],t:0},
+      {c:['Febrero','$1,690,000','$1,560,000','+8.3%'],t:0},
+      {c:['Marzo','$1,910,000','$1,665,000','+14.7%'],t:0},
+      {c:['TOTAL','$5,210,000','$4,745,000','+9.8%'],t:1},
+    ]}
   },
   edo:{
     q:'Muéstrame el estado de resultados',
     narr:['La utilidad neta del periodo fue $312,400 (margen del 17%).','El costo de ventas representó el 58% de los ingresos; los gastos de operación bajaron 3%.'],
     kpis:[['Ventas netas','$1,840,500',0],['Utilidad bruta','$773,010',0],['Utilidad neta','$312,400',1]],
-    table:[['Ventas Netas','$1,840,500',0],['Costo de Ventas','-$1,067,490',0],['Utilidad Bruta','$773,010',1],['Gastos de Operación','-$386,500',0],['Utilidad de Operación','$386,510',1],['Otros / Financiamiento','-$74,110',0],['UTILIDAD NETA','$312,400',1]]
+    table:{title:'Estado de Resultados',head:['Concepto','Importe','% s/ventas'],rows:[
+      {c:['Ventas Netas','$1,840,500','100%'],t:0},
+      {c:['Costo de Ventas','-$1,067,490','-58%'],t:0},
+      {c:['Utilidad Bruta','$773,010','42%'],t:1},
+      {c:['Gastos de Operación','-$386,500','-21%'],t:0},
+      {c:['Utilidad de Operación','$386,510','21%'],t:1},
+      {c:['Otros / Financiamiento','-$74,110','-4%'],t:0},
+      {c:['UTILIDAD NETA','$312,400','17%'],t:1},
+    ]}
   },
   balance:{
     q:'Muéstrame el balance general',
     narr:['El activo total es $8,940,200 y cuadra con pasivo + capital.','El capital contable es el 54% del total; la liquidez se mantiene saludable.'],
     kpis:[['Activo total','$8,940,200',0],['Pasivo total','$4,112,800',0],['Capital contable','$4,827,400',1]],
-    table:[['ACTIVO','',1],['Activo Circulante','$3,210,400',0],['Activo Fijo','$5,729,800',0],['Total Activo','$8,940,200',1],['PASIVO','',1],['Pasivo a Corto Plazo','$2,470,300',0],['Pasivo a Largo Plazo','$1,642,500',0],['Total Pasivo','$4,112,800',1],['Capital Contable','$4,827,400',1]]
+    table:{title:'Balance General',head:['Concepto','Importe','% del total'],rows:[
+      {c:['ACTIVO','',''],t:1},
+      {c:['Activo Circulante','$3,210,400','36%'],t:0},
+      {c:['Activo Fijo','$5,729,800','64%'],t:0},
+      {c:['Total Activo','$8,940,200','100%'],t:1},
+      {c:['PASIVO','',''],t:1},
+      {c:['Pasivo a Corto Plazo','$2,470,300','28%'],t:0},
+      {c:['Pasivo a Largo Plazo','$1,642,500','18%'],t:0},
+      {c:['Total Pasivo','$4,112,800','46%'],t:1},
+      {c:['Capital Contable','$4,827,400','54%'],t:1},
+    ]}
   }
 };
 
@@ -195,7 +227,8 @@ async function render(sc){
   let html=`<div class="narr"><div class="ni"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><b>${sc.narr[0]}</b><p>${sc.narr[1]}</p></div></div>`;
   html+=`<div class="kpis">`+sc.kpis.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v ${k[2]?'g':''}">${k[1]}</div></div>`).join('')+`</div>`;
   if(sc.chart){html+=`<div class="chartwrap"><h4>${sc.chart.title}</h4>${await chart(sc.chart)}</div>`;}
-  if(sc.table){html+=`<div class="chartwrap"><table class="mini"><thead><tr><th>Concepto</th><th style="text-align:right">Saldo</th></tr></thead><tbody>`+sc.table.map(t=>`<tr class="${t[2]?'tot':''}"><td>${t[0]}</td><td class="num">${t[1]}</td></tr>`).join('')+`</tbody></table></div>`;}
+  if(sc.table){const tb=sc.table;
+    html+=`<div class="chartwrap"><h4>${tb.title||'Reporte'}</h4><table class="mini"><thead><tr>`+tb.head.map((h,i)=>`<th${i>0?' style="text-align:right"':''}>${h}</th>`).join('')+`</tr></thead><tbody>`+tb.rows.map(r=>`<tr class="${r.t?'tot':''}">`+r.c.map((cell,i)=>`<td${i>0?' class="num"':''}>${cell}</td>`).join('')+`</tr>`).join('')+`</tbody></table></div>`;}
   html+=`<button class="xbtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Exportar a Excel</button>`;
   rep.innerHTML=html;card.appendChild(rep);feed.appendChild(card);feed.scrollTop=feed.scrollHeight;
   // animar barras
