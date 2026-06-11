@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumen — Demo interactiva</title>
+<meta name="description" content="Demo interactiva de Lumen: pregunta por tus números y mira cómo se convierte en un reporte. Datos de ejemplo." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231E40AF'/%3E%3Ctext x='50' y='72' font-size='62' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --primary:#1E40AF; --secondary:#3B82F6; --accent:#D97706; --accent2:#059669;
+  --bg:#eef2f9; --panel:#ffffff; --ink:#1E3A8A; --muted:#64748b; --line:#e2e8f0; --dark:#0f1b3d;
+  --font:'Fira Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:#0f172a;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+/* top bar */
+.topbar{height:52px;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex:none}
+.topbar .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.05rem}
+.topbar .brand .mk{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--secondary),var(--primary));display:grid;place-items:center;font-size:.85rem}
+.badge{font-size:.7rem;font-weight:700;background:rgba(217,119,6,.2);color:#fcd34d;border:1px solid rgba(217,119,6,.4);padding:3px 9px;border-radius:999px}
+.topbar .right{display:flex;gap:14px;align-items:center;font-size:.82rem}
+.topbar .right a{color:#cbd5e1}.topbar .right a:hover{color:#fff}
+/* shell */
+.shell{flex:1;display:flex;min-height:0}
+.side{width:210px;background:var(--dark);color:#cbd5e1;padding:18px 12px;flex:none;display:flex;flex-direction:column;gap:4px}
+@media(max-width:760px){.side{display:none}}
+.side .sec{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin:14px 8px 6px}
+.side .item{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:.86rem;cursor:pointer}
+.side .item svg{width:16px;height:16px;opacity:.8}
+.side .item.active{background:var(--primary);color:#fff}
+.side .item:not(.active):hover{background:rgba(255,255,255,.06);color:#fff}
+.side .conn{margin-top:auto;font-size:.72rem;background:rgba(5,150,105,.12);border:1px solid rgba(5,150,105,.35);color:#6ee7b7;padding:8px 10px;border-radius:9px;display:flex;align-items:center;gap:7px}
+.dotg{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+/* main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.pipeline{display:flex;align-items:center;gap:6px;padding:12px 22px;background:var(--panel);border-bottom:1px solid var(--line);overflow-x:auto;flex:none}
+.pnode{display:flex;align-items:center;gap:8px;font-size:.76rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.pnode .pic{width:26px;height:26px;border-radius:8px;background:#eef2f9;display:grid;place-items:center;color:var(--muted);transition:.3s}
+.pnode .pic svg{width:15px;height:15px}
+.pnode.on{color:var(--primary)}
+.pnode.on .pic{background:var(--primary);color:#fff;transform:scale(1.08)}
+.pnode.done .pic{background:var(--accent2);color:#fff}
+.parrow{color:#cbd5e1;flex:none}
+.feed{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:12px;max-width:880px}
+.row.me{align-self:flex-end;flex-direction:row-reverse}
+.av{width:34px;height:34px;border-radius:9px;flex:none;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:#fff}
+.av.ai{background:linear-gradient(135deg,var(--secondary),var(--primary))}
+.av.me{background:#475569}
+.bub{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:.92rem;box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.row.me .bub{background:var(--primary);color:#fff;border-color:transparent}
+.typing{display:inline-flex;gap:5px;padding:4px 2px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--secondary);animation:bl 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+/* report card */
+.report{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(30,64,175,.08);width:100%;max-width:840px}
+.report .narr{background:linear-gradient(120deg,#fff7ed,#fffbeb);border-bottom:1px solid #fcd9a8;padding:14px 16px;display:flex;gap:12px}
+.report .narr .ni{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;flex:none}
+.report .narr b{color:#7c2d12}.report .narr p{font-size:.86rem;color:#9a5520;margin-top:3px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+.kpi{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+.kpi .l{font-size:.74rem;color:var(--muted)}
+.kpi .v{font-size:1.35rem;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+.kpi .v.g{color:var(--accent2)}
+.chartwrap{padding:0 16px 16px}
+.chartwrap h4{font-size:.84rem;color:var(--ink);margin-bottom:8px;font-weight:700}
+table.mini{width:100%;border-collapse:collapse;font-size:.82rem}
+table.mini th{text-align:left;color:var(--muted);font-weight:600;padding:7px 10px;border-bottom:1px solid var(--line);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+table.mini td{padding:8px 10px;border-bottom:1px solid #f1f5f9}
+table.mini td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+table.mini tr.tot td{font-weight:800;color:var(--primary);background:#f8fafc}
+.xbtn{display:inline-flex;align-items:center;gap:7px;margin:0 16px 16px;padding:9px 14px;border-radius:10px;background:var(--accent2);color:#fff;font-size:.82rem;font-weight:700;border:0;cursor:pointer}
+/* composer */
+.composer{flex:none;border-top:1px solid var(--line);background:var(--panel);padding:14px 22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-size:.8rem;font-weight:600;color:var(--primary);background:#eef2ff;border:1px solid #dbe4ff;padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s}
+.chip:hover{background:var(--primary);color:#fff}
+.cbar{display:flex;gap:10px;align-items:center}
+.cbar input{flex:1;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-family:var(--font);font-size:.9rem;background:#f8fafc}
+.cbar .mic,.cbar .send{width:44px;height:44px;border-radius:11px;border:0;display:grid;place-items:center;cursor:pointer;flex:none}
+.cbar .mic{background:#eef2ff;color:var(--primary)}
+.cbar .send{background:var(--primary);color:#fff}
+.cbar svg{width:19px;height:19px}
+.hint{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;font-size:.78rem;padding:8px 14px;border-radius:999px;opacity:.92;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:5}
+.bar{transition:height .8s cubic-bezier(.22,1,.36,1),y .8s cubic-bezier(.22,1,.36,1)}
+@media(prefers-reduced-motion:reduce){.bar{transition:none}.typing i{animation:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand"><span class="mk">L</span> Lumen <span class="badge">● DEMO · datos de ejemplo</span></div>
+  <div class="right"><a href="../">← Volver al showcase</a><a href="../../">Portafolio</a></div>
+</div>
+<div class="shell">
+  <aside class="side">
+    <div class="sec">Módulos</div>
+    <div class="item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/></svg> Asistente</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l3-3 3 3 5-6"/></svg> Estado de Resultados</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Balance General</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg> Ventas</div>
+    <div class="conn"><span class="dotg"></span> Conectado · modo demo</div>
+  </aside>
+  <div class="main">
+    <div class="pipeline" id="pipe">
+      <div class="pnode" data-k="q"><span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Pregunta</div>
+      <span class="parrow">→</span>
+      <div class="pnode" data-k="ai"><span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0-3 3 3 3 0 0 0 0 6 3 3 0 0 0 3 3 3 3 0 0 0 6 0 3 3 0 0 0 3-3 3 3 0 0 0 0-6 3 3 0 0 0-3-3 3 3 0 0 0-3-3z"/></svg></span> IA interpreta</div>
+      <span class="parrow">→</span>
+      <div class="pnode" data-k="sql"><span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg></span> Consulta</div>
+      <span class="parrow">→</span>
+      <div class="pnode" data-k="rep"><span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span> Reporte</div>
+    </div>
+    <div class="feed" id="feed">
+      <div class="row"><div class="av ai">L</div><div class="bub">Hola 👋 Soy Lumen. Pregúntame por tus <b>ventas</b>, tu <b>estado de resultados</b> o tu <b>balance</b> — escribiendo o por voz. Prueba una sugerencia abajo. <span style="color:var(--muted)">(Todos los datos son de ejemplo.)</span></div></div>
+    </div>
+    <div class="composer">
+      <div class="chips" id="chips">
+        <span class="chip" data-s="ventas">¿Cuánto vendí este mes por sucursal?</span>
+        <span class="chip" data-s="edo">Muéstrame el estado de resultados</span>
+        <span class="chip" data-s="comp">Compara las ventas del trimestre</span>
+      </div>
+      <div class="cbar">
+        <input id="inp" placeholder="Escribe tu pregunta…" />
+        <button class="mic" id="mic" aria-label="Voz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"/></svg></button>
+        <button class="send" id="send" aria-label="Enviar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="hint" id="hint">Toca una sugerencia para ver la magia ✨</div>
+
+<script>
+const feed=document.getElementById('feed'), pipe=document.getElementById('pipe'), hint=document.getElementById('hint');
+const fmt=n=>'$'+n.toLocaleString('es-MX');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?Math.min(ms,120):ms));
+let busy=false;
+
+const SC={
+  ventas:{
+    q:'¿Cuánto vendí este mes por sucursal?',
+    narr:['Vendiste $1,840,500 este mes (+12.4% vs. el mes anterior).','La sucursal Centro lidera con el 31%; Norte es la de mayor crecimiento (+22%).'],
+    kpis:[['Ventas del mes','$1,840,500',0],['Ticket promedio','$642',0],['Crecimiento','+12.4%',1]],
+    chart:{title:'Ventas por sucursal (miles)',data:[['Centro',570,1],['Norte',420,0],['Sur',360,0],['Playa',280,0],['Centro 2',210,0]]}
+  },
+  comp:{
+    q:'Compara las ventas del trimestre',
+    narr:['El trimestre cerró en $5.21 M, 9.8% arriba del anterior.','Marzo fue el mejor mes; el promedio mensual subió de $1.58 M a $1.74 M.'],
+    kpis:[['Trimestre actual','$5,210,000',1],['Trimestre anterior','$4,745,000',0],['Variación','+9.8%',1]],
+    chart:{title:'Ventas por mes (miles)',data:[['Ene',1610,0],['Feb',1690,0],['Mar',1910,1]]}
+  },
+  edo:{
+    q:'Muéstrame el estado de resultados',
+    narr:['La utilidad neta del periodo fue $312,400 (margen del 17%).','El costo de ventas representó el 58% de los ingresos; los gastos de operación bajaron 3%.'],
+    kpis:[['Ventas netas','$1,840,500',0],['Utilidad bruta','$773,010',0],['Utilidad neta','$312,400',1]],
+    table:[['Ventas Netas','$1,840,500',0],['Costo de Ventas','-$1,067,490',0],['Utilidad Bruta','$773,010',1],['Gastos de Operación','-$386,500',0],['Utilidad de Operación','$386,510',1],['Otros / Financiamiento','-$74,110',0],['UTILIDAD NETA','$312,400',1]]
+  }
+};
+
+function rowEl(side,html){const r=document.createElement('div');r.className='row '+(side==='me'?'me':'');r.innerHTML=`<div class="av ${side==='me'?'me':'ai'}">${side==='me'?'Tú':'L'}</div><div class="bub">${html}</div>`;feed.appendChild(r);feed.scrollTop=feed.scrollHeight;return r;}
+async function setPipe(k){pipe.querySelectorAll('.pnode').forEach(n=>{const o=['q','ai','sql','rep'];const idx=o.indexOf(n.dataset.k),cur=o.indexOf(k);n.classList.toggle('on',n.dataset.k===k);n.classList.toggle('done',idx<cur);});}
+function resetPipe(){pipe.querySelectorAll('.pnode').forEach(n=>n.classList.remove('on','done'));}
+
+async function chart(c){
+  const max=Math.max(...c.data.map(d=>d[1])), W=560,H=190,pad=30,bw=Math.min(70,(W-pad*2)/c.data.length-14);
+  let bars='',labels='';
+  c.data.forEach((d,i)=>{
+    const x=pad+i*((W-pad*2)/c.data.length)+((W-pad*2)/c.data.length-bw)/2;
+    const h=Math.round((d[1]/max)*(H-50)), y=H-22-h;
+    const col=d[2]?'#D97706':(i%2?'#3B82F6':'#1E40AF');
+    bars+=`<rect class="bar" x="${x}" y="${H-22}" width="${bw}" height="0" rx="4" fill="${col}" data-y="${y}" data-h="${h}"/>`;
+    bars+=`<text x="${x+bw/2}" y="${y-6}" text-anchor="middle" font-size="11" font-weight="700" fill="#1E3A8A" class="lbl" opacity="0">${d[1]}</text>`;
+    labels+=`<text x="${x+bw/2}" y="${H-6}" text-anchor="middle" font-size="11" fill="#64748b">${d[0]}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto"><line x1="${pad}" y1="${H-22}" x2="${W-10}" y2="${H-22}" stroke="#e2e8f0"/>${bars}${labels}</svg>`;
+}
+
+async function render(sc){
+  const card=document.createElement('div');card.className='row';card.innerHTML=`<div class="av ai">L</div>`;
+  const rep=document.createElement('div');rep.className='report';
+  let html=`<div class="narr"><div class="ni"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><b>${sc.narr[0]}</b><p>${sc.narr[1]}</p></div></div>`;
+  html+=`<div class="kpis">`+sc.kpis.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v ${k[2]?'g':''}">${k[1]}</div></div>`).join('')+`</div>`;
+  if(sc.chart){html+=`<div class="chartwrap"><h4>${sc.chart.title}</h4>${await chart(sc.chart)}</div>`;}
+  if(sc.table){html+=`<div class="chartwrap"><table class="mini"><thead><tr><th>Concepto</th><th style="text-align:right">Saldo</th></tr></thead><tbody>`+sc.table.map(t=>`<tr class="${t[2]?'tot':''}"><td>${t[0]}</td><td class="num">${t[1]}</td></tr>`).join('')+`</tbody></table></div>`;}
+  html+=`<button class="xbtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Exportar a Excel</button>`;
+  rep.innerHTML=html;card.appendChild(rep);feed.appendChild(card);feed.scrollTop=feed.scrollHeight;
+  // animar barras
+  await wait(40);
+  rep.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>{b.setAttribute('y',b.dataset.y);b.setAttribute('height',b.dataset.h);},80*i));
+  rep.querySelectorAll('.lbl').forEach((l,i)=>setTimeout(()=>l.setAttribute('opacity','1'),80*i+500));
+}
+
+async function ask(key){
+  if(busy)return; busy=true; hint.style.display='none';
+  const sc=SC[key]; rowEl('me',sc.q);
+  const t=rowEl('ai','<span class="typing"><i></i><i></i><i></i></span>');
+  await setPipe('q'); await wait(550);
+  await setPipe('ai'); t.querySelector('.bub').innerHTML='Interpretando tu pregunta…'; await wait(750);
+  await setPipe('sql'); t.querySelector('.bub').innerHTML='Generando la consulta y ejecutándola…'; await wait(850);
+  await setPipe('rep'); t.querySelector('.bub').innerHTML='Armando el reporte ✓'; await wait(450);
+  t.remove(); resetPipe();
+  await render(sc);
+  busy=false;
+}
+
+document.getElementById('chips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(c)ask(c.dataset.s);});
+function submit(){const v=document.getElementById('inp').value.toLowerCase();document.getElementById('inp').value='';let k='ventas';if(v.includes('result')||v.includes('utilidad'))k='edo';else if(v.includes('compar')||v.includes('trimestre'))k='comp';ask(k);}
+document.getElementById('send').addEventListener('click',submit);
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+document.getElementById('mic').addEventListener('click',()=>{const i=document.getElementById('inp');i.value='¿Cuánto vendí este mes por sucursal?';setTimeout(submit,400);});
+// autoplay primera demo
+setTimeout(()=>ask('ventas'),1100);
+</script>
+</body>
+</html>
