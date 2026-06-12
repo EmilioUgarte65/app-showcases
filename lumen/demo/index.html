@@ -114,6 +114,7 @@ table.mini tr.tot td{font-weight:800;color:var(--primary);background:#f8fafc}
     <div class="item" data-s="edo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l3-3 3 3 5-6"/></svg> Estado de Resultados</div>
     <div class="item" data-s="balance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Balance General</div>
     <div class="item" data-s="balanza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 7h18M6 7l-3 6a4 4 0 0 0 6 0zM18 7l-3 6a4 4 0 0 0 6 0z"/></svg> Balanza de comprobación</div>
+    <div class="item" data-s="catalogo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16M2 6h.01M2 12h.01M2 18h.01"/></svg> Catálogo de cuentas</div>
     <div class="item" data-s="ventas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg> Ventas</div>
     <div class="conn"><span class="dotg"></span> Conectado a Business Central</div>
   </aside>
@@ -128,14 +129,17 @@ table.mini tr.tot td{font-weight:800;color:var(--primary);background:#f8fafc}
       <div class="pnode" data-k="rep"><span class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span> Reporte</div>
     </div>
     <div class="feed" id="feed">
-      <div class="row"><div class="av ai">L</div><div class="bub">Hola 👋 Soy Lumen. Pregúntame por tus <b>ventas</b>, tu <b>estado de resultados</b> o tu <b>balance</b> — escribiendo o por voz. Prueba una sugerencia abajo. <span style="color:var(--muted)">(Todos los datos son de ejemplo.)</span></div></div>
+      <div class="row"><div class="av ai">L</div><div class="bub">Hola 👋 Soy Lumen, tu analista de datos. Pregúntame lo que sea de tu negocio: <b>ventas</b> por sucursal, departamento, vendedor, canal o producto; o tu <b>contabilidad</b> — estado de resultados, balance, balanza, catálogo de cuentas. Escribiendo o por voz; te respondo con KPIs, gráfica, tabla y narrativa, y lo descargas en Excel o PowerPoint. <span style="color:var(--muted)">(Datos de ejemplo · conectado a Business Central.)</span></div></div>
     </div>
     <div class="composer">
       <div class="chips" id="chips">
-        <span class="chip" data-s="ventas">¿Cuánto vendí este mes por sucursal?</span>
-        <span class="chip" data-s="edo">Muéstrame el estado de resultados</span>
-        <span class="chip" data-s="balanza">Dame la balanza de comprobación</span>
-        <span class="chip" data-s="comp">Compara las ventas del trimestre</span>
+        <span class="chip" data-s="ventas">Ventas del mes por sucursal</span>
+        <span class="chip" data-s="depto">Ventas por departamento</span>
+        <span class="chip" data-s="vendedor">Mis mejores vendedores</span>
+        <span class="chip" data-s="canal">Ventas por canal</span>
+        <span class="chip" data-s="top">Top productos</span>
+        <span class="chip" data-s="edo">Estado de resultados</span>
+        <span class="chip" data-s="balanza">Balanza de comprobación</span>
       </div>
       <div class="cbar">
         <input id="inp" placeholder="Escribe tu pregunta…" />
@@ -226,6 +230,74 @@ const SC={
       {c:['4010 Ventas','$1,067,490','$5,907,990','-$4,840,500'],t:0},
       {c:['TOTALES','$12,480,000','$12,480,000','$0'],t:1},
     ]}
+  },
+  depto:{
+    q:'Ventas por departamento este mes',
+    narr:['Construcción concentra el 41% de la venta ($755 K) y el mejor margen del mes.','Eléctrico creció 18% vs. el mes anterior; Pintura es el de menor rotación.'],
+    kpis:[['Departamentos','5',0],['Líder','Construcción',0],['Margen prom.','28.4%',1]],
+    chart:{title:'Ventas por departamento (miles)',data:[['Construc.',755,1],['Eléctrico',410,0],['Plomería',330,0],['Iluminac.',210,0],['Pintura',135,0]]},
+    table:{title:'Ventas por departamento',head:['Departamento','Ventas','Unidades','% total','Margen'],rows:[
+      {c:['Construcción','$755,000','9,420','41%','31%'],t:0},
+      {c:['Eléctrico','$410,000','5,180','22%','27%'],t:0},
+      {c:['Plomería','$330,000','3,940','18%','26%'],t:0},
+      {c:['Iluminación','$210,000','2,110','11%','29%'],t:0},
+      {c:['Pintura','$135,500','1,620','8%','24%'],t:0},
+      {c:['TOTAL','$1,840,500','22,270','100%','28.4%'],t:1},
+    ]}
+  },
+  vendedor:{
+    q:'¿Quiénes son mis mejores vendedores?',
+    narr:['Marcela Ríos lidera con $312 K y 486 tickets este mes.','El top 3 concentra el 38% de la venta total.'],
+    kpis:[['Vendedores activos','24',0],['Top vendedor','$312,000',1],['Ticket prom.','$642',0]],
+    table:{title:'Ventas por vendedor (top 6)',head:['Vendedor','Ventas','Tickets','Ticket prom.','% total'],rows:[
+      {c:['Marcela Ríos','$312,000','486','$642','17%'],t:0},
+      {c:['Diego Salas','$248,500','402','$618','13.5%'],t:0},
+      {c:['Karla Méndez','$201,300','355','$567','11%'],t:0},
+      {c:['Tomás Vega','$176,800','299','$591','9.6%'],t:0},
+      {c:['Andrea Lara','$154,200','268','$575','8.4%'],t:0},
+      {c:['Luis Cano','$132,900','241','$551','7.2%'],t:0},
+    ]}
+  },
+  canal:{
+    q:'Ventas por canal',
+    narr:['La tienda física aporta el 58%, pero la venta en línea crece al doble de ritmo.','Los marketplaces ya son 1 de cada 5 pesos vendidos.'],
+    kpis:[['Canales','4',0],['Venta en línea','+34%',1],['% online','42%',0]],
+    chart:{title:'Ventas por canal (miles)',data:[['Tienda',1067,1],['En línea',430,0],['Marketpl. A',210,0],['Marketpl. B',133,0]]},
+    table:{title:'Ventas por canal',head:['Canal','Ventas','% total','Crecimiento'],rows:[
+      {c:['Tienda física','$1,067,000','58%','+6%'],t:0},
+      {c:['Tienda en línea','$430,000','23%','+34%'],t:0},
+      {c:['Marketplace A','$210,000','11%','+21%'],t:0},
+      {c:['Marketplace B','$133,500','8%','+12%'],t:0},
+      {c:['TOTAL','$1,840,500','100%','+12.4%'],t:1},
+    ]}
+  },
+  top:{
+    q:'Top productos más vendidos',
+    narr:['El cemento gris encabeza con 1,240 unidades y $234 K.','Los 5 productos top suman el 27% de la venta del mes.'],
+    kpis:[['SKUs vendidos','1,284',0],['Top producto','$234,000',1],['Unidades top','4,090',0]],
+    table:{title:'Top productos',head:['Producto','Unidades','Ventas','% total'],rows:[
+      {c:['Cemento Gris 50 kg','1,240','$234,000','12.7%'],t:0},
+      {c:['Varilla 3/8" x 12 m','980','$175,000','9.5%'],t:0},
+      {c:['Cable THW Cal. 12','640','$96,000','5.2%'],t:0},
+      {c:['Pintura Vinílica 19 L','410','$72,000','3.9%'],t:0},
+      {c:['Tubo PVC 1" x 6 m','820','$58,000','3.2%'],t:0},
+    ]}
+  },
+  catalogo:{
+    q:'Muéstrame el catálogo de cuentas',
+    narr:['El catálogo tiene 142 cuentas activas en 5 grupos contables.','Las cuentas de resultados (4000–5000) son las de mayor movimiento.'],
+    kpis:[['Cuentas activas','142',0],['Grupos','5',0],['Con movimiento','98',1]],
+    table:{title:'Catálogo de cuentas',head:['Cuenta','Nombre','Tipo','Naturaleza'],rows:[
+      {c:['1000','Activo','Título',''],t:1},
+      {c:['1010','Caja y Bancos','Detalle','Deudora'],t:0},
+      {c:['1020','Clientes','Detalle','Deudora'],t:0},
+      {c:['1030','Inventarios','Detalle','Deudora'],t:0},
+      {c:['2000','Pasivo','Título',''],t:1},
+      {c:['2010','Proveedores','Detalle','Acreedora'],t:0},
+      {c:['3000','Capital','Título',''],t:1},
+      {c:['4010','Ventas','Detalle','Acreedora'],t:0},
+      {c:['5010','Costo de Ventas','Detalle','Deudora'],t:0},
+    ]}
   }
 };
 
@@ -293,7 +365,17 @@ async function ask(key){
 }
 
 document.getElementById('chips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(c)ask(c.dataset.s);});
-function submit(){const v=document.getElementById('inp').value.toLowerCase();document.getElementById('inp').value='';let k='ventas';if(v.includes('balanza')||v.includes('comprobaci'))k='balanza';else if(v.includes('balance')||v.includes('activo')||v.includes('pasivo'))k='balance';else if(v.includes('result')||v.includes('utilidad'))k='edo';else if(v.includes('compar')||v.includes('trimestre'))k='comp';ask(k);}
+function submit(){const v=document.getElementById('inp').value.toLowerCase();document.getElementById('inp').value='';let k='ventas';
+  if(v.includes('balanza')||v.includes('comprobaci'))k='balanza';
+  else if(v.includes('catálogo')||v.includes('catalogo')||v.includes('cuentas'))k='catalogo';
+  else if(v.includes('balance')||v.includes('activo')||v.includes('pasivo'))k='balance';
+  else if(v.includes('result')||v.includes('utilidad'))k='edo';
+  else if(v.includes('departamento')||v.includes('categor')||v.includes('área')||v.includes('area'))k='depto';
+  else if(v.includes('vendedor')||v.includes('asesor'))k='vendedor';
+  else if(v.includes('canal')||v.includes('marketplace')||v.includes('línea')||v.includes('linea')||v.includes('ecommerce'))k='canal';
+  else if(v.includes('top')||v.includes('producto')||v.includes('más vendido')||v.includes('mas vendido'))k='top';
+  else if(v.includes('compar')||v.includes('trimestre'))k='comp';
+  ask(k);}
 document.getElementById('send').addEventListener('click',submit);
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
 document.getElementById('mic').addEventListener('click',()=>{const i=document.getElementById('inp');i.value='¿Cuánto vendí este mes por sucursal?';setTimeout(submit,400);});
